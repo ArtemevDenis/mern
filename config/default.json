@@ -1,0 +1,6 @@
+{
+  "post": 5000,
+  "jwtSecret": "MS>pDt+KS2(7-^:A",
+  "mongoUri": "mongodb+srv://dev:1234qwer@merncluster.36b9x.mongodb.net/app?retryWrites=true&w=majority",
+  "baseUrl": "http://localhost:5000"
+}
