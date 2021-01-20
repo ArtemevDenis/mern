@@ -4,6 +4,7 @@ const shortid = require('shortid')
 const Link = require('../models/Link')
 const config = require('config')
 const authMiddleware = require('../middleware/auth.middleware')
+const adminAuthMiddleware = require('../middleware/adminAuth.middleware')
 const router = Router()
 
 
@@ -41,6 +42,7 @@ router.get('/', authMiddleware, async (req, res) => {
     }
 })
 
+
 router.get('/:id', authMiddleware, async (req, res) => {
     try {
         const link = await Link.findById(req.params.id)
@@ -49,4 +51,34 @@ router.get('/:id', authMiddleware, async (req, res) => {
         res.status(500).json({message: 'Упс, что то пошло не так...'})
     }
 })
+
+
+//===============================
+//          ADMIN BLOCK
+//===============================
+
+
+router.get('/admin/all', adminAuthMiddleware, async (req, res) => {
+    try {
+        const linkArr = [];
+        await Link.find({}, (err, links) => {
+            links.forEach(link => linkArr.push(link))
+        })
+        res.json(linkArr)
+    } catch (e) {
+        res.status(500).json({message: 'Упс, что то пошло не так...'})
+    }
+})
+
+
+router.get('/admin/byUser/:userID', adminAuthMiddleware, async (req, res) => {
+    try {
+        const links = await Link.find({owner: req.params.userID})
+        res.json(links)
+    } catch (e) {
+        res.status(500).json({message: 'Упс, что то пошло не так...'})
+    }
+})
+
+
 module.exports = router

@@ -12,23 +12,35 @@ const router = Router()
 router.post(
     '/register',
     [
-        check('email', 'Не корректный email').isEmail(),
-        check('password', 'Минимальная длнна пароля 6 символов').isLength({min: 6})
+
+        check('email', 'Введите email').exists({checkFalsy: true}),
+        check('name', 'Введите имя').exists({checkFalsy: true}),
+        check('password', 'Введите пароль').exists({checkFalsy: true}),
+        check('passwordRepeat', 'Введите пароль повторно').exists({checkFalsy: true}),
+
+        check('email', 'Не корректный email').normalizeEmail().isEmail(),
+        check('password', 'Минимальная длнна пароля 6 символов').isLength({min: 6}),
+        check('passwordRepeat', 'Пароли не совподают').custom((value, {req}) => {
+
+            return req.body.passwordRepeat.trim() === req.body.password.trim()
+        })
     ],
     async (req, res) => {
         try {
 
-            console.dir('Body:' + req.body);
+            console.log('Body: ');
+            console.dir(req.body)
 
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
+                errors.array().forEach(msg => console.log(msg));
                 return res.status(400).json(
                     {
                         errors: errors.array(),
                         message: 'Некоректные данные'
                     })
             }
-            const {email, password} = req.body;
+            const {email, password, name} = req.body;
 
             const candidate = await User.findOne({email})
             if (candidate) {
@@ -37,12 +49,12 @@ router.post(
 
             const hashedPassword = await bcrypt.hash(password, 12);
 
-            const user = new User({email, password: hashedPassword})
+            const user = new User({email, password: hashedPassword, name})
 
             await user.save();
             res.status(201).json({message: 'Пользователь создан'})
         } catch (e) {
-            res.status(500).json({message: 'Упс, что то пошло не так...'})
+            res.status(500).json({error: e, message: 'Упс, что то пошло не так...'})
         }
     })
 
@@ -51,17 +63,19 @@ router.post(
 router.post(
     '/login',
     [
+        check('email', 'Введите email').exists({checkFalsy: true}),
         check('email', 'Не корректный email').normalizeEmail().isEmail(),
-        check('email', 'Введите email').exists(),
+        check('password', 'Введите пароль').exists({checkFalsy: true}),
         check('password', 'Минимальная длнна пароля 6 символов').isLength({min: 6}),
-        check('password', 'Введите пароль').exists()
     ],
     async (req, res) => {
         try {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
+                errors.array().forEach(msg => console.log(msg));
                 return res.status(400).json(
                     {
+
                         errors: errors.array(),
                         message: 'Некоректные данные при входе'
                     })

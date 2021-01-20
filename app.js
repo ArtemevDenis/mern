@@ -9,6 +9,7 @@ app.use(express.json({extended: true}))
 
 app.use('/api/auth', require('./routes/auth.routes'))
 app.use('/api/link', require('./routes/link.routes'))
+app.use('/api/users', require('./routes/users.routes'))
 app.use('/t', require('./routes/redirect.routes'))
 
 if (process.env.NODE_ENV === 'production') {
@@ -19,8 +20,9 @@ if (process.env.NODE_ENV === 'production') {
     })
 }
 
-const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGODB_URI;
+
+const PORT = config.get('port') || 5000;
+const MONGO_URI = config.get('mongoUri')
 
 async function start() {
 

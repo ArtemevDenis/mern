@@ -1,9 +1,13 @@
 import React, {useContext, useEffect, useState} from 'react'
-import {useHttp} from "../hooks/http.hook";
-import {useMessage} from "../hooks/message.hook";
-import {AuthContext} from "../context/AuthContext";
+import { useHistory } from "react-router-dom";
+
+
+import {useHttp} from "../../hooks/http.hook";
+import {useMessage} from "../../hooks/message.hook";
+import {AuthContext} from "../../context/AuthContext";
 
 export const AuthPage = () => {
+    let history = useHistory();
     const auth = useContext(AuthContext)
     const message = useMessage()
     const {loading, error, request, clearError} = useHttp()
@@ -21,13 +25,8 @@ export const AuthPage = () => {
         setForm({...form, [event.target.name]: event.target.value})
     }
 
-    const registerHandler = async () => {
-        try {
-            const data = await request('/api/auth/register', 'POST', {...form})
-            message(data.message)
-        } catch (e) {
-
-        }
+    const registerHandler =  () => {
+        history.push("/registration");
     }
 
     const loginHandler = async () => {
@@ -45,7 +44,7 @@ export const AuthPage = () => {
                 <h1>Сократи ссылку</h1>
                 <div className="card light-blue lighten-5">
                     <div className="card-content black-text">
-                        <span className="card-title">Card Title</span>
+                        <span className="card-title">Вход</span>
                         <div className={'row'}>
                             <div className={'col s6'}>
                                 <div className="input-field ">

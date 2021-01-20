@@ -2,6 +2,9 @@ import React, {useContext} from 'react'
 
 import {NavLink, useHistory} from "react-router-dom";
 import {AuthContext} from "../context/AuthContext";
+import {SidebarData} from "./SidebarData";
+
+
 
 export const Navbar = () => {
 
@@ -14,15 +17,14 @@ export const Navbar = () => {
         history.push('/')
     }
     return (
-        <nav>
-            <div className="nav-wrapper blue darken-1" style={{padding: '0 2rem'}}>
-                <span className="brand-logo">СОКРАТи ссылку</span>
-                <ul id="nav-mobile" className="right hide-on-med-and-down">
-                    <li><NavLink to="/create">Создать</NavLink></li>
-                    <li><NavLink to="/links">Ссылки</NavLink></li>
-                    <li><a href="/" onClick={logoutHandler}>Выйти</a></li>
-                </ul>
-            </div>
+        <nav >
+
+            <ul>
+                {SidebarData.map((item, index) => {
+                    return <li key={index}><NavLink to={item.path}>{item.title}</NavLink></li>
+                })}
+                <li></li>
+            </ul>
         </nav>
     )
 }

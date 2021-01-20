@@ -1,7 +1,7 @@
 import React, {useContext, useState} from 'react'
 import {useHistory} from 'react-router-dom'
-import {useHttp} from "../hooks/http.hook";
-import {AuthContext} from "../context/AuthContext";
+import {useHttp} from "../../hooks/http.hook";
+import {AuthContext} from "../../context/AuthContext";
 
 export const CreateLinkPage = () => {
 

@@ -1,0 +1,22 @@
+.main {
+    min-height: 100vh;
+    display: grid;
+    grid-template-areas:
+            'header'
+            'container'
+            'footer';
+    grid-template-rows: 50px 1fr 30px;
+    grid-template-columns: 1fr;
+
+}
+
+.main--sidebar {
+    min-height: 100vh;
+    display: grid;
+    grid-template-areas:
+            'header header'
+            'sidebar container'
+            'footer footer';
+    grid-template-rows: 50px 1fr 30px;
+    grid-template-columns: 150px 1fr;
+}
